@@ -41,6 +41,8 @@ import { EventsPageComponent } from './pages/events-page/events-page.component';
 import { EventCalendarComponent } from './components/event-calendar/event-calendar.component';
 
 import { FullCalendarModule } from 'ng-fullcalendar';
+import { StudentsItemComponent } from './components/students-item/students-item.component';
+import { StudentsPageComponent } from './pages/students-page/students-page.component';
 
   const appRoutes: Routes = [
     {
@@ -69,6 +71,10 @@ import { FullCalendarModule } from 'ng-fullcalendar';
       component: UsersPageComponent
     },
     {
+      path: 'students',
+      component: StudentsPageComponent
+    },
+    {
       path: '**',
       component: PageNotFoundComponent,
       pathMatch: 'full'
@@ -92,6 +98,8 @@ import { FullCalendarModule } from 'ng-fullcalendar';
     UsersItemComponent,
     EventsPageComponent,
     EventCalendarComponent,
+    StudentsItemComponent,
+    StudentsPageComponent,
     
 
   ],

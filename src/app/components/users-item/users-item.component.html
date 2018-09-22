@@ -1,8 +1,11 @@
 <div class="tabs">
   <ul>
-    <li (click)="usersTabClicked()" [ngClass]="{'is-active': isUsersTabActive}">
-      <a>Students</a>
+    <li (click)="registeredStudentsTabClicked()" [ngClass]="{'is-active': isRegisteredStudentsTabActive}">
+      <a>Registered students</a>
     </li>
+    <li (click)="sbgTabClicked()" [ngClass]="{'is-active': isSbgTabActive}">
+        <a>SBG</a>
+      </li>
   </ul>
   <ul>
     <!-- <li (click)="attendanceHostsTabClicked()" [ngClass]="{'is-active': isAttendanceHostsActive}">
@@ -11,10 +14,12 @@
 
   </ul>
 </div>
-<ng-container *ngIf="isUsersTabActive">
+
+<ng-container *ngIf="isRegisteredStudentsTabActive">
   <table class="table is-hoverable is-fullwidth">
     <thead>
       <tr>
+   
         <th>Student Number</th>
         <th>Student First Name</th>
         <th>Student Middle Name</th>
@@ -26,6 +31,7 @@
     </thead>
     <tfoot>
       <tr>
+       
         <th>Student Number</th>
         <th>Student First Name</th>
         <th>Student Middle Name</th>
@@ -36,7 +42,8 @@
       </tr>
     </tfoot>
     <tbody>
-      <tr *ngFor="let student of studentCollection">
+      <tr *ngFor="let student of registeredStudentCollection">
+ 
         <th><a href="#">{{student.student_id_number}}</a></th>
         <td>{{student.student_first_name}}</td>
         <td>{{student.student_middle_name}}</td>
@@ -59,7 +66,64 @@
       </tr>
     </tbody>
   </table>
+</ng-container>
 
+
+
+<ng-container *ngIf="isSbgTabActive">
+    <table class="table is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+     
+          <th>Student Number</th>
+          <th>Student First Name</th>
+          <th>Student Middle Name</th>
+          <th>Student Last Name</th>
+          <th>Student Program</th>
+          <th>Year level</th>
+     
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+         
+          <th>Student Number</th>
+          <th>Student First Name</th>
+          <th>Student Middle Name</th>
+          <th>Student Last Name</th>
+          <th>Student Program</th>
+          <th>Year level</th>
+          <!-- <th>Options</th> -->
+        </tr>
+      </tfoot>
+      <tbody>
+        <tr *ngFor="let student of sbgCollection">
+   
+          <th><a href="#">{{student.student_id_number}}</a></th>
+          <td>{{student.student_first_name}}</td>
+          <td>{{student.student_middle_name}}</td>
+          <td>{{student.student_last_name}}</td>
+          <td>{{student.student_program}}</td>
+          <td>{{student.student_year_level}}</td>
+          <div class="buttons">
+            <a (click)="openUsersDialogUpdate(student.id)" class="button is-success">
+              <span class="icon">
+                <i class="fa fa-pencil"></i>
+              </span>
+            </a>
+            <a (click)="deleteStudentDocument(student.id)" class="button is-danger">
+              <span class="icon">
+                <i class="fa fa-trash"></i>
+              </span>
+            </a>      
+          </div>
+    
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  
   <form  (ngSubmit)="onSubmitUpdateNewsDocument()" ngNativeValidate>
     <div class="modal" [ngClass]="{'is-active': isUsersUpdateDialogOpen}">
       <div class="modal-background" (click)="closeUsersDialogUpdate()"></div>
@@ -74,7 +138,7 @@
           <div class="field">
             <label class="label">Student ID Number</label>
             <div class="control">
-              <input class="input" name="student_id_number" type="number" placeholder="Student Number here" [(ngModel)]="studentDocument.student_id_number"
+              <input class="input" name="student_id_number" type="number" placeholder="Student Number here" [(ngModel)]="userDocument.student_id_number"
                 required>
             </div>
           </div>
@@ -82,21 +146,21 @@
           <div class="field">
             <label class="label">Student First Name</label>
             <div class="control">
-              <input class="input" name="student_first_name" type="text" placeholder="First name here" [(ngModel)]="studentDocument.student_first_name"
+              <input class="input" name="student_first_name" type="text" placeholder="First name here" [(ngModel)]="userDocument.student_first_name"
                 required>
             </div>
           </div>
           <div class="field">
             <label class="label">Student Middle Name</label>
             <div class="control">
-              <input class="input" name="student_middle_name" type="text" placeholder="Mddle name here" [(ngModel)]="studentDocument.student_middle_name"
+              <input class="input" name="student_middle_name" type="text" placeholder="Mddle name here" [(ngModel)]="userDocument.student_middle_name"
                 required>
             </div>
           </div>
           <div class="field">
             <label class="label">Student Last Name</label>
             <div class="control">
-              <input class="input" name="student_last_name" type="text" placeholder="Last name here" [(ngModel)]="studentDocument.student_last_name"
+              <input class="input" name="student_last_name" type="text" placeholder="Last name here" [(ngModel)]="userDocument.student_last_name"
                 required>
             </div>
           </div>
@@ -104,7 +168,7 @@
           <div class="field">
             <label class="label">Student Program</label>
             <div class="control">
-              <input class="input" name="student_program" type="text" placeholder="Program name here" [(ngModel)]="studentDocument.student_program"
+              <input class="input" name="student_program" type="text" placeholder="Program name here" [(ngModel)]="userDocument.student_program"
                 required>
             </div>
           </div>
@@ -113,7 +177,7 @@
               <label class="label">Student Year level</label>
             <div class="control has-icons-left">
               <div class="select">
-                <select name="student_year_level" [(ngModel)]="studentDocument.student_year_level" required>
+                <select name="student_year_level" [(ngModel)]="userDocument.student_year_level" required>
                   <option value="" disabled>Year level</option>
                   <option value="Grade 11">Grade 11</option>
                   <option value="Grade 12">Grade 12</option>
@@ -124,12 +188,20 @@
                 </select>
               </div>
             </div>
-
-            <span class="icon is-left">
-              <i class="fa fa-user-graduate"></i>
-            </span>
           </div>
-
+          <div class="field">
+            <label class="label">User type</label>
+          <div class="control">
+            <div class="select">
+              <select name="user_type" [(ngModel)]="userDocument.user_type" required>
+                <option value="" disabled>User type</option>
+                <option value="Student">Student</option>
+                <option value="SBG">SBG</option>
+                <option value="Registrar">Registrar</option>
+              </select>
+            </div>
+          </div>
+        </div>
         </section>
         <footer class="modal-card-foot">
           <button class="button is-success" type="submit">Add</button>
@@ -138,4 +210,4 @@
       </div>
     </div>
 </form>  
-</ng-container>
+

@@ -10,7 +10,6 @@ export interface News {
     news_timestamp_post_last_updated?:any;
 
     news_author_id?:string;
-    news_author_type?:string;
     news_author_name?:string;
     news_author_email?:string;
     news_author_photo_url?:string;

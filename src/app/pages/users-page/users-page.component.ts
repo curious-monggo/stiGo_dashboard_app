@@ -17,7 +17,7 @@ export class UsersPageComponent implements OnInit {
 
   student:Student[];
 
-  isStudentAlreadyInDB:boolean;
+
 
   studentDocument:Student={
     student_id_number:'',
@@ -41,12 +41,6 @@ export class UsersPageComponent implements OnInit {
   closeUsersDialog() {
     this.isUsersDialogOpen = false;
     this.clearInput();
-  }
-  openNotification(){
-    this.isStudentAlreadyInDB = true;
-  }
-  closeNotification(){
-    this.isStudentAlreadyInDB = false;
   }
   clearInput(){
     this.studentDocument = {

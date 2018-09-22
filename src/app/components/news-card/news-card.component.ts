@@ -41,11 +41,10 @@ export class NewsCardComponent implements OnInit {
     news_title:'',
     news_content:'',
 
-    // news_timestamp_post_created:Object,
-    // news_timestamp_post_last_updated:Object,
+    // news_timestamp_post_created:'',
+    // news_timestamp_post_last_updated:'',
     
     news_author_id:'',
-    news_author_user_type:'',
     news_author_photo_url:'',
     news_author_name:'',
     news_author_email:''
@@ -95,11 +94,12 @@ export class NewsCardComponent implements OnInit {
 
       this.dateTimeCreated = newsDocument.news_timestamp_post_created;
 
-      // let dateLastUpdated = new Date(newsDocument.news_timestamp_post_last_updated.toDate());
-      // let convertDateLastUpdatedToLocale = dateLastUpdated.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric', year: 'numeric' });
-      // console.log(dateLastUpdated);
+      // // let dateLastUpdated = new Date(newsDocument.news_timestamp_post_last_updated.toDate());
+      // // let convertDateLastUpdatedToLocale = dateLastUpdated.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric', year: 'numeric' });
+      // // console.log(dateLastUpdated);
 
       this.dateTimeLastUpdated = newsDocument.news_timestamp_post_last_updated;
+      console.log(newsDocument);
 
       this.newsDocument = {
         news_photo_name:newsDocument.news_photo_name,
@@ -107,16 +107,13 @@ export class NewsCardComponent implements OnInit {
         news_title:newsDocument.news_title,
         news_content:newsDocument.news_content,
 
-        // news_timestamp_post_created:newsDocument.news_timestamp_post_created,
-        // news_timestamp_post_last_updated:newsDocument.news_timestamp_post_last_updated,
-        news_author_user_type:newsDocument.news_author_type,
+        // news_timestamp_post_created:this.dateTimeCreated,
+        // news_timestamp_post_last_updated:this.dateTimeLastUpdated,
         news_author_id:newsDocument.news_author_id,
         news_author_photo_url:newsDocument.news_author_photo_url,
         news_author_name:newsDocument.news_author_name,
         news_author_email:newsDocument.news_author_email
       };
-      //this.newsObj = news;
-      console.log('url', this.newsDocument.news_author_photo_url);
     });
 
     
@@ -141,10 +138,7 @@ export class NewsCardComponent implements OnInit {
           console.log(url);
           this.isNewsDialogFormButtonDisabled = false;
           return true;
-        }
-        
-
-        
+        }  
       }, (error)=>{
           console.log('Error on get url, will delete',error);
           this.storage.ref('stiGo/news/'+this.newsDocumentId+'/'+this.fileName).delete();
@@ -162,10 +156,9 @@ export class NewsCardComponent implements OnInit {
       news_content:'',
   
       // news_timestamp_post_created:'',
-        // news_timestamp_post_created:Object,
-        // news_timestamp_post_last_updated:Object,
-      news_author_id:'',
-      news_author_user_type:'',
+        // news_timestamp_post_created:'',
+        // news_timestamp_post_last_updated:'',
+      news_author_id:'',  
       news_author_photo_url:'',
       news_author_name:'',
       news_author_email:''
@@ -221,7 +214,7 @@ export class NewsCardComponent implements OnInit {
     console.log('id'+this.newsDocumentId);
     this.newsService.updateNewsDocument(this.newsDocumentId, this.newsDocument);
     this.closeNewsDialogUpdate();
-    newsForm.reset();
+    // newsForm.reset();
   }
 
   deleteNewsDocument() {

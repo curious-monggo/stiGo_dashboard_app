@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 
 //model
 import { Student } from './../../models/student/student';
+import { User } from './../../models/user/user';
 
 //service
 import { StudentService } from './../../services/student-service/student.service';
-
+import { UsersService } from './../../services/users-service/users.service';
 //for unsubscribing
 import { Subscription } from 'rxjs';
 
@@ -16,61 +17,79 @@ import { Subscription } from 'rxjs';
 })
 export class UsersItemComponent implements OnInit {
   studentCollection:Student[];
+  registeredStudentCollection;
+  sbgCollection;
+  
   isUsersUpdateDialogOpen:boolean = false;
-  studentIdNumber;
+  userId;
 
-  isUsersTabActive=true;
+
+  isRegisteredStudentsTabActive = false;
   isAttendanceHostsActive = false
+  isSbgTabActive = false;
 
-
-  studentDocument:Student={
+  userType;
+  userDocument={
+    user_type:'',
     student_id_number:'',
     student_first_name:'',
     student_middle_name:'',
     student_last_name:'',
     student_program:'',
     student_year_level:'',
-    student_registration_code:'',
-    student_timestamp_added:'',
-    student_timestamp_last_updated:''
+    // student_timestamp_added:'',
+    // student_timestamp_last_updated:''
   };
 
 
   studentCollectionSubscription:Subscription;
   constructor(
-    private studentService: StudentService
+    private studentService: StudentService,
+    private usersService: UsersService
   ) { 
-    this.getStudentCollection();
 
   }
 
   ngOnInit() {
+    this.registeredStudentsTabClicked();
+  }
+  // attendanceHostsTabClicked() {
+
+  //   this.isRegisteredStudentsTabActive = false;
+  //   this.isAttendanceHostsActive = true;
+  //   this.isSbgTabActive = false;
+  // }
+  registeredStudentsTabClicked() {
+    this.isRegisteredStudentsTabActive = true;
+    this.isAttendanceHostsActive = false;
+
+    this.isSbgTabActive = false;
+    this.getRegisteredStudents();
+  }
+  sbgTabClicked() {
+    this.isRegisteredStudentsTabActive = false;
+    this.isAttendanceHostsActive = false;
+
+    this.isSbgTabActive = true;
+    this.getSbg();
   }
 
-  usersTabClicked() {
-    this.isUsersTabActive = true;
-    this.isAttendanceHostsActive = false;
-  } 
-  attendanceHostsTabClicked() {
-    this.isUsersTabActive = false;
-    this.isAttendanceHostsActive = true;
-  } 
-  getStudentCollection() {
-    this.studentCollectionSubscription = this.studentService.getStudentCollection().
-    subscribe(studentCollection => {
-      this.studentCollection = studentCollection;
+  getRegisteredStudents(){
+    this.usersService.getRegisteredStudents().subscribe(studentCollection => {
+      this.registeredStudentCollection = studentCollection;
+      console.log(this.registeredStudentCollection);
     });
   }
-  getStudentDocument(studentId:string){
-    this.studentService.getStudentDocument(studentId).subscribe(studentDoc => {
-
-      // let dateCreated = new Date(newsDocument.news_timestamp_post_created.toDate());
-      // let convertDateToLocale = dateCreated.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric', year: 'numeric' });
-      // console.log(dateCreated);
-
-      // this.dateTime = convertDateToLocale;
-
-      this.studentDocument = {
+  getSbg(){
+    this.usersService.getSbg().subscribe(studentCollection => {
+      this.sbgCollection = studentCollection;
+      console.log(this.sbgCollection);
+    });
+  }
+  getUserDocument(userId:string){
+    this.usersService.getUserDocument(userId).subscribe(studentDoc => {
+      this.userDocument = {
+        user_type:studentDoc.user_type,
         student_id_number:studentDoc.student_id_number,   
         student_first_name:studentDoc.student_first_name,
         student_middle_name:studentDoc.student_middle_name,
@@ -79,24 +98,23 @@ export class UsersItemComponent implements OnInit {
         student_year_level:studentDoc.student_year_level
       };
 
-
+      console.log(this.userDocument)
     });
-
-    
   }
-  openUsersDialogUpdate(studentId:string) {
+  openUsersDialogUpdate(userId:string) {
     this.isUsersUpdateDialogOpen = true;
-    this.studentIdNumber = studentId;
-    // this.newsPageComponent.getNewsObj(newsId);
-    this.getStudentDocument(studentId);
+    console.log('test')
+    this.userId = userId;
+    this.getUserDocument(userId);
   }
   closeUsersDialogUpdate() {
-    this.studentIdNumber = null;
+    this.userId = null;
     this.isUsersUpdateDialogOpen = false;
     
   }
   clearInput(){
-    this.studentDocument = {
+    this.userDocument = {
+      user_type:'',
       student_id_number:'',
       student_first_name:'',
       student_middle_name:'',
@@ -106,12 +124,13 @@ export class UsersItemComponent implements OnInit {
     };
   }
   onSubmitUpdateNewsDocument() {
-    console.log('id'+this.studentIdNumber);
+    console.log('id'+this.userId);
 
-    this.studentService.updateStudentDoc(this.studentIdNumber, this.studentDocument);
+    this.usersService.updateUserDoc(this.userId, this.userDocument);
     this.closeUsersDialogUpdate();  
     this.clearInput();
   }
+
   deleteStudentDocument(id){
     this.studentService.deleteStudentDoc(id);
   }

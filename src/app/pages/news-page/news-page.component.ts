@@ -16,6 +16,7 @@ import { NgForm } from '@angular/forms';
 
 import { Observable, of } from 'rxjs';
 
+import { AngularFireAuth } from 'angularfire2/auth';
 
 
 
@@ -29,7 +30,8 @@ export class NewsPageComponent implements OnInit {
 
   //booleans
   isNewsDialogOpen: boolean = false;
-  isNewsDialogFormButtonDisabled: boolean = true;
+  isNewsDialogFormButtonDisabled: boolean = false;
+ 
 
   newsDocument: News = {
     news_photo_url: '',
@@ -39,6 +41,7 @@ export class NewsPageComponent implements OnInit {
     news_content: '',
 
     news_timestamp_post_created: '',
+    news_timestamp_post_last_updated: '',
 
     news_author_id: '',
     news_author_photo_url: '',
@@ -53,16 +56,25 @@ export class NewsPageComponent implements OnInit {
   pushId;
   fileRef;
 
+
   constructor(
     private newsService: NewsService,
     private authService: AuthService,
     private afDB: AngularFirestore,
+    private afAuth: AngularFireAuth,
     private storage: AngularFireStorage
-  ) { }
+  ) { 
 
-  ngOnInit() {
+    
   }
 
+  ngOnInit() {
+
+
+  }
+  // downloadReport(){
+
+  // }
   clearNewsDocOutput() {
     this.newsDocument = {
       news_photo_url: '',
@@ -75,7 +87,6 @@ export class NewsPageComponent implements OnInit {
       news_timestamp_post_last_updated: '',
 
       news_author_id: '',
-      news_author_type:'',
       news_author_photo_url: '',
       news_author_name: '',
       news_author_email: ''
@@ -98,8 +109,10 @@ export class NewsPageComponent implements OnInit {
 
 
   uploadHandler(event) {
+  
 
     if(event.target.files[0].name !== undefined){
+      this.isNewsDialogFormButtonDisabled = true;
       this.file = event.target.files[0];
       this.fileName = event.target.files[0].name;
       this.newsDocument.news_photo_name = this.fileName;
@@ -130,12 +143,13 @@ export class NewsPageComponent implements OnInit {
   }
 
   onSubmitCreateNews(newsForm: NgForm) {
-
+    if(this.pushId == null){
+      this.pushId = this.afDB.createId();
+    }
     this.newsDocument.news_author_id = this.authService.userKey;
     this.newsDocument.news_author_photo_url = this.authService.userObj.user_photo_url;
     this.newsDocument.news_author_name = this.authService.userObj.user_name;
     this.newsDocument.news_author_email = this.authService.userObj.user_email;
-     this.newsDocument.news_author_type = this.authService.user_type;
     console.log(this.newsDocument);
     this.newsService.addNewsDocument(this.pushId, this.newsDocument);
     this.closeNewsDialog();
